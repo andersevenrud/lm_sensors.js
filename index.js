@@ -65,14 +65,20 @@ function parseSensors(lines) {
       const matchSensor = line.match(/^(\w+):$/);
       if ( matchSensor ) {
         currentSensor = matchSensor[1];
-        result[currentDevice].sensors[currentSensor] = {};
+        result[currentDevice].sensors[currentSensor] = {
+          sensor: undefined
+        };
       }
 
       if ( currentSensor ) {
         const matchValue = line.match(/^\s+(\w+): (.*)/);
         if ( matchValue ) {
-          const key = matchValue[1].split('_', 2)[1];
-          result[currentDevice].sensors[currentSensor][key] = parseFloat(matchValue[2]);
+          const keys = matchValue[1].split('_', 2);
+          result[currentDevice].sensors[currentSensor][keys[1]] = parseFloat(matchValue[2]);
+
+          if ( typeof result[currentDevice].sensors[currentSensor].sensor === 'undefined' ) {
+            result[currentDevice].sensors[currentSensor].sensor = keys[0].replace(/[^A-z]/g, '');
+          }
         }
       }
     }
