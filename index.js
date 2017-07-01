@@ -30,9 +30,10 @@ const BIN = '/usr/bin/sensors -u';
  *
  *
  * @param {Array} lines The lines from stdout
+ * @param {Object} [opts] Options
  * @return {Object} JSON representation
  */
-function parseSensors(lines) {
+function parseSensors(lines, opts) {
   const result = {};
 
   let currentDevice;
@@ -74,10 +75,17 @@ function parseSensors(lines) {
         const matchValue = line.match(/^\s+(\w+): (.*)/);
         if ( matchValue ) {
           const keys = matchValue[1].split('_', 2);
-          result[currentDevice].sensors[currentSensor][keys[1]] = parseFloat(matchValue[2]);
+          const sensorType = keys[0].replace(/[^A-z]/g, '');
+
+          let sensorValue = parseFloat(matchValue[2]);
+          if ( sensorType === 'temp' && opts.fahrenheit === true ) {
+            sensorValue = sensorValue * 9 / 5 + 32;
+          }
+
+          result[currentDevice].sensors[currentSensor][keys[1]] = sensorValue;
 
           if ( typeof result[currentDevice].sensors[currentSensor].sensor === 'undefined' ) {
-            result[currentDevice].sensors[currentSensor].sensor = keys[0].replace(/[^A-z]/g, '');
+            result[currentDevice].sensors[currentSensor].sensor = sensorType;
           }
         }
       }
@@ -116,12 +124,16 @@ const execSensors = () => new Promise((resolve, reject) => {
  *
  * Resolves with JSON data, or rejects with an error message
  *
+ * @param {Object} [opts] Options
+ * @param {Boolean} [opts.fahrenheit] Toggle fahrenheit units
  * @return {Promise}
  */
-const getSensors = () => new Promise((resolve, reject) => {
+const getSensors = (opts) => new Promise((resolve, reject) => {
+  opts = opts || {};
+
   execSensors().then((stdout) => {
     try {
-      resolve(parseSensors(stdout.split('\n')));
+      resolve(parseSensors(stdout.split('\n'), opts));
     } catch ( e ) {
       reject(e);
     }
