@@ -29,6 +29,7 @@ Truncated for simplicity:
   "adapter": "ISA adapter",
   "sensors": {
     "AVCC": {
+      "sensor": "in",
       "input": 3.312,
       "min": 2.976,
       "max": 3.632,
@@ -36,6 +37,7 @@ Truncated for simplicity:
       "beep": 0
     },
     "fan1": {
+      "sensor": "fan",
       "input": 739,
       "min": 0,
       "alarm": 0,
@@ -43,6 +45,7 @@ Truncated for simplicity:
       "pulses": 2
     },
     "fan2": {
+      "sensor": "fan",
       "input": 211,
       "min": 0,
       "alarm": 0,
@@ -50,11 +53,13 @@ Truncated for simplicity:
       "pulses": 2
     },
     "AUXTIN2": {
+      "sensor": "temp",
       "input": 34,
       "type": 4,
       "offset": 0
     },
     "AUXTIN3": {
+      "sensor": "temp",
       "input": 41.5,
       "type": 4,
       "offset": 0
