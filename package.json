@@ -1,6 +1,6 @@
 {
   "name": "lm_sensors.js",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A library to get information from the sensors command",
   "email": "andersevenrud@gmail.com",
   "license": "MIT",
