@@ -63,7 +63,7 @@ function parseSensors(lines, opts) {
     if ( matchAdapter  ) {
       result[currentDevice].adapter = matchAdapter[1];
     } else {
-      const matchSensor = line.match(/^(\w+):$/);
+      const matchSensor = line.match(/^(^[a-z0-9_\s]+):$/i);
       if ( matchSensor ) {
         currentSensor = matchSensor[1];
         result[currentDevice].sensors[currentSensor] = {
